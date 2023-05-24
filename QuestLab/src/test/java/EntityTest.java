@@ -128,6 +128,27 @@ public class EntityTest {
     }
 
     @Test
+    public void ifItemConsumedCannotUseItAgain() {
+        assertEquals(20, entityStrong.getHitPoints(), 0.01);
+        entityStrong.receiveHit(10);
+        assertEquals(10, entityStrong.getHitPoints(), 0.01);
+        entityStrong.pickUpConsumable(Consumable.WEAKPOTION);
+        entityStrong.imbibe(Consumable.WEAKPOTION);
+        assertEquals(15, entityStrong.getHitPoints(), 0.01);
+        entityStrong.imbibe(Consumable.WEAKPOTION);
+        assertEquals(15, entityStrong.getHitPoints(), 0.01);
+    }
+
+    @Test
+    public void canOnlyHealUpToThreshold() {
+        entityStrong.pickUpConsumable(Consumable.WEAKPOTION);
+        entityStrong.imbibe(Consumable.WEAKPOTION);
+        assertEquals(24, entityStrong.getHitPoints(), 0.01);
+    }
+
+
+
+    @Test
     public void canImbibeIfHasItemAndDie() {
         assertEquals(20, entityStrong.getHitPoints(),
                 0.0);
@@ -153,7 +174,6 @@ public class EntityTest {
         entityAccurate.ply(Consumable.BULLPOISON, entityStrong);
         entityAccurate.ply(Consumable.BULLPOISON, entityStrong);
         assertFalse(entityStrong.getAliveStatus());
-
     }
 
 }

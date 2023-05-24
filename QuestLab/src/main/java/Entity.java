@@ -15,15 +15,20 @@ public class Entity {
     Boolean alive;
 
     double hitPoints;
+    double hitPointsLimit;
 
     double strength;
     double accuracy;
 
 
+    public double getHitPointsLimit() {
+        return hitPointsLimit;
+    }
 
     public Entity(String name, double hitPoints, double strength, double accuracy){
         this.name = name;
         this.hitPoints = hitPoints;
+        this.hitPointsLimit = hitPoints * 1.2;
         this.alive = true;
         this.heldItem = Weapon.FISTS;
         this.strength = strength;
@@ -148,8 +153,9 @@ public class Entity {
     public void imbibe(Consumable consumable) {
         if (consumables.contains(consumable)) {
             System.out.println(this.getName() + " has consumed " + consumable.getPotionName());
-            this.hitPoints += consumable.getHpImpact();
-            System.out.println("Their vitality has changed by " + consumable.getHpImpact() + " to " + this.hitPoints);
+            this.hitPoints += Math.min(consumable.getHpImpact(), this.hitPointsLimit - this.hitPoints);
+            consumables.remove(consumable);
+            System.out.println( "Their vitality has changed by up to " + consumable.getHpImpact() + " to " + this.hitPoints);
             checkAlive();
         } else {
             System.out.println(this.getName() + " does not have " + consumable.getPotionName());
